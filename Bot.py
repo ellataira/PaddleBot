@@ -1,3 +1,5 @@
+import datetime
+
 from selenium.webdriver.support.select import Select
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -58,6 +60,7 @@ def book_paddle_automated(res):
     submit_res = driver.find_element(By.NAME, "submit_paypal")
     submit_res.click()
     driver.implicitly_wait(10)
+
     print("complete")
     driver.close()
 
