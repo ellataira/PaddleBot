@@ -5,6 +5,17 @@ import time
 from Bot import book_paddle_automated
 from Reservation import Reservation
 
+def make_res(res):
+    court = book_paddle_automated(res)
+    """if reservation failed, try one more time """
+    print(court)
+
+    if (court == "fail"):
+        print("retrying")
+        court = book_paddle_automated(res)
+
+    print("final: " + court)
+
 def court1():
     CODE = "35780"
     DAY = ["1", "19"]  # [month, day]
@@ -15,7 +26,7 @@ def court1():
     NAME2 = "Hoyt, Mark"
 
     res1 = Reservation(CODE, DAY, TIME, COURT_INDEX, NAME0, NAME1, NAME2)
-    book_paddle_automated(res1)
+    make_res(res1)
 
 
 def court2():
@@ -29,17 +40,10 @@ def court2():
     NAME2 = "Bedell, Brendan"
 
     res2 = Reservation(CODE, DAY, TIME, COURT_INDEX, NAME0, NAME1, NAME2)
-    book_paddle_automated(res2)
+    make_res(res2)
 
-
-"""TODO: revisit site to confirm booking (or send ss of success screen) and add email upon success"""
-
-def main():
-
-    """ Here we are using the schedule module to run this code every day at 9 AM"""
-
-schedule.every().day.at("20:14:00").do(court1)
-schedule.every().day.at("20:14:20").do(court2)
+court1()
+court2()
 
 while 1:
     schedule.run_pending()

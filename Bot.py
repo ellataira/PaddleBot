@@ -15,12 +15,13 @@ def book_paddle_automated(res):
     NAME2 = res.name3
     NAME3 = res.name4
 
+
     """ Initialising a Chrome instance """
     driver = webdriver.Chrome()
 
     """ Enter the URL of the website"""
     driver.get("https://www.registration-software.net/cgi-bin/scheduling/rfparks/schedule.cgi")
-    driver.implicitly_wait(5)
+    driver.implicitly_wait(10)
 
     """sign in using member code"""
     username = driver.find_element(By.NAME, "general_password")
@@ -59,8 +60,14 @@ def book_paddle_automated(res):
 
     submit_res = driver.find_element(By.NAME, "submit_paypal")
     submit_res.click()
-    driver.implicitly_wait(10)
+    driver.implicitly_wait(5)
 
-    print("complete")
-    driver.close()
+    """check if the reservation passed """
+    try :
+        driver.find_element(By.XPATH, "//*[contains(text(),'Success')]")
+    except:
+        return "fail"
+
+    driver.quit()
+    return "complete"
 
