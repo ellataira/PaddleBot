@@ -1,25 +1,31 @@
-import schedule
+from datetime import date
 
-import time
+import sys
 
 from Bot import book_paddle_automated
 from Reservation import Reservation
 
 def make_res(res):
+    print("attempting to reserve: \n" +
+          "day: " + res.day + " at " + res.time +
+          "\nfor court " + res.court +
+          "\nunder " + res.name1 + ", " + res.name2 + ", " + res.name3 +
+          "\ncode: " + res.code + "\n")
+
     court = book_paddle_automated(res)
     """if reservation failed, try one more time """
-    print(court)
+    print("first attempt: " + court + "\n")
 
     if (court == "fail"):
-        print("retrying")
+        print("attempt failed, retrying...")
         court = book_paddle_automated(res)
 
-    print("final: " + court)
+    print("final status: " + court)
 
 def court1():
     CODE = "35780"
-    DAY = ["1", "19"]  # [month, day]
-    TIME = "15:00"
+    DAY = ["1", "25"]  # [month, day]
+    TIME = "13:30"
     COURT_INDEX = "1"
     NAME0 = "Taira, Kelly"
     NAME1 = "Krause, Ron"
@@ -31,8 +37,8 @@ def court1():
 
 def court2():
     CODE = "23580"
-    DAY = ["1", "19"]  # [month, day]
-    TIME = "15:00"
+    DAY = ["1", "25"]  # [month, day]
+    TIME = "13:30"
     COURT_INDEX = "1" ## once a court is filled, it is no longer in the court list <td>s (it has become <th>),
                         # so the next open court will always have an index of 1
     NAME0 = "Flodin, TJ"
@@ -42,9 +48,8 @@ def court2():
     res2 = Reservation(CODE, DAY, TIME, COURT_INDEX, NAME0, NAME1, NAME2)
     make_res(res2)
 
+sys.stdout = open('/Users/ellataira/Desktop/PaddleBot/paddle_bot_out.txt', 'w')
+print(date.today() + "\n\n")
 court1()
 court2()
-
-while 1:
-    schedule.run_pending()
-    time.sleep(1)
+sys.stdout.close()
