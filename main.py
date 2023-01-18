@@ -20,7 +20,7 @@ def make_res(res):
         print("attempt failed, retrying...")
         court = book_paddle_automated(res)
 
-    print("final status: " + court)
+    print("final status: " + court + "\n---------------------------------")
 
 def court1():
     CODE = "35780"
@@ -49,7 +49,7 @@ def court2():
     make_res(res2)
 
 sys.stdout = open('/Users/ellataira/Desktop/PaddleBot/paddle_bot_out.txt', 'w')
-print(date.today() + "\n\n")
+print(str(date.today()) + "\n\n")
 court1()
 court2()
 sys.stdout.close()
