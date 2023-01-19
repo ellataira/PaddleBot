@@ -1,9 +1,8 @@
 from datetime import date
-
 import sys
-
 from Bot import book_paddle_automated
-from Reservation import Reservation
+from data import data
+
 
 def make_res(res):
     print("attempting to reserve: \n" +
@@ -23,30 +22,12 @@ def make_res(res):
     print("final status: " + court + "\n---------------------------------")
 
 def court1():
-    CODE = "35780"
-    DAY = ["1", "26"]  # [month, day]
-    TIME = "13:30"
-    COURT_INDEX = "2"
-    NAME0 = "Taira, Kelly"
-    NAME1 = "Krause, Ron"
-    NAME2 = "Hoyt, Mark"
-
-    res1 = Reservation(CODE, DAY, TIME, COURT_INDEX, NAME0, NAME1, NAME2)
-    make_res(res1)
+    ## court data in .gitignore file which contains Reservation()s of booking info
+    make_res(data.COURT1)
 
 
 def court2():
-    CODE = "23580"
-    DAY = ["1", "26"]  # [month, day]
-    TIME = "13:30"
-    COURT_INDEX = "2" ## once a court is filled, it is no longer in the court list <td>s (it has become <th>),
-                        # so the next open court will always have an index of 1
-    NAME0 = "Flodin, TJ"
-    NAME1 = "Lundak, Dan"
-    NAME2 = "Condon, Sean"
-
-    res2 = Reservation(CODE, DAY, TIME, COURT_INDEX, NAME0, NAME1, NAME2)
-    make_res(res2)
+    make_res(data.COURT2)
 
 sys.stdout = open('/Users/ellataira/Desktop/PaddleBot/paddle_bot_out.txt', 'w')
 print(str(date.today()) + "\n\n")
