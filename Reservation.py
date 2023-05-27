@@ -1,4 +1,4 @@
-from Bot import book_paddle_automated
+from paddle import book_paddle_automated
 from Util import Util
 
 

@@ -1,6 +1,6 @@
 from datetime import date
 import sys
-from Bot import book_paddle_automated
+from paddle import book_paddle_automated
 from data import data
 
 
