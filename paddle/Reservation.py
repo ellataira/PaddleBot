@@ -1,12 +1,14 @@
-from paddle import book_paddle_automated
 from Util import Util
 
 
 class Reservation :
     def __init__(self, code, day, time, court, name1, name2, name3):
+
+        util = Util(1)  # 1 for paddle
+
         self.code = code
-        self.day = Util.calc_day_val(day)
-        self.time = Util.calc_time(time)
+        self.day = util.calc_day_val(day)
+        self.time = util.calc_time(time)
         self.court = court
         self.name1 = name1
         self.name2 = name2

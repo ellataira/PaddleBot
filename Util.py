@@ -7,11 +7,45 @@ from selenium.webdriver.support.select import Select
 
 class Util:
 
-    def calc_time(time):
-        NUM_ROWS = 12  ## including top rows with date selector and column names
-        """ROW-TO-TIME-SLOT KEY, indexed at 1 (tr)
-        """
-        times = {"": 1,
+    def __init__(self, paddle):
+        self.times = self.init_times(paddle)
+
+    def init_times(self, bin):
+        # 0 = paddle, 1 = tennis
+        if bin == 1:
+            self.times = {
+            "6:00": 1,
+            "6:30": 2,
+            "7:00": 3,
+            "7:30": 4,
+            "8:00": 5,
+            "8:30": 6,
+            "9:00": 7,
+            "9:30": 8,
+            "10:00": 9,
+            "10:30": 10,
+            "11:00": 11,
+            "11:30": 12,
+            "12:00": 13,
+            "12:30": 14,
+            "13:00": 15,
+            "13:30": 16,
+            "14:00": 17,
+            "14:30": 18,
+            "15:00": 19,
+            "15:30": 20,
+            "16:00": 21,
+            "16:30": 22,
+            "17:00": 23,
+            "17:30": 24,
+            "18:00": 25,
+            "18:30": 26,
+            "19:00": 27,
+            "19:30": 28,
+            "20:00": 29
+        }
+        if bin == 0:
+            self.times = {"": 1,
                  "": 2,
                  "7:30": 3,
                  "9:00": 4,
@@ -24,9 +58,13 @@ class Util:
                  "19:30": 11,
                  "21:00": 12}
 
-        return str(times[time])
+    def calc_time(self, time):
+        """ROW-TO-TIME-SLOT KEY, indexed at 1 (tr)
+        """
+        return str(self.times[time])
 
-    def calc_day_val(day):
+
+    def calc_day_val(self, day):
         start = 218  # 218 is value for jan 14, 2023 -- not sure how else to deal with select
         m, d = int(day[0]), int(day[1])
 
@@ -41,3 +79,13 @@ class Util:
 
         start += d
         return str(start)
+
+
+    def calc_duration(self, duration):
+        durs = {
+            "0.5": 1,
+            "1": 2,
+            "1.5": 3
+        }
+
+        return str(durs[duration])

@@ -5,8 +5,11 @@ from selenium.webdriver.common.by import By
 
 
 def book_tennis_automated(res):
-    USERID = res.user # TODO
-    PASSWORD = res.pw
+    USERID = res.username # TODO
+    PASSWORD = res.password
+    TIMESLOT = res.timeslot
+    COURT = res.court
+    DURATION = res.duration
 
 
     """ Initialising a Chrome instance """
@@ -35,33 +38,26 @@ def book_tennis_automated(res):
     enter = driver.find_element(By.XPATH, '//*[@id="CheckUser"]')
     enter.click()
 
-    """select correct day from drop-down menu --- uses variable DAY """
-    # TODO
+    """ go to date first """
+    # skip forward by 1 week
+    next_week = driver.find_element(By.ID, "NextWeek")
+    next_week.click()
 
-    """calculating coordinate of item in table """
-    # TODO
-    tbody_xpath = "/html/body/center[2]/table/tbody/tr[2]/td[2]/center/table/tbody"
-    row_xpath = tbody_xpath + "/tr[" + TIME_INDEX + "]/"
-    row_col_xpath = row_xpath + "td[" + COURT_INDEX + "]/p/a"
+    """calculating coordinate of court-timeslot object in table """
+    # select timeslot
+    timeslot_path = '/html/body/div[1]/form/p[2]/table/tbody/tr[{}]'.format(TIMESLOT)
+    # the court column index is court_number + 1
+    timeslot_with_court = timeslot_path + '/td[{}]'.format(str(int(COURT) + 1))
 
-    """click court-time combination"""
-    time_court_toggle.click()
+    timeslot = driver.find_element(By.XPATH, timeslot_with_court)
+    timeslot.click()
     driver.implicitly_wait(5)
 
-    """filling in text slots"""
-    name0 = driver.find_element(By.ID, "myInput0")
-    name0.send_keys(NAME0)
-    name1 = driver.find_element(By.ID, "myInput1")
-    name1.send_keys(NAME1)
-    name2 = driver.find_element(By.ID, "myInput2")
-    name2.send_keys(NAME2)
-    name3 = driver.find_element(By.ID, "myInput3")
-    name3.send_keys(NAME3)
+    """fill in reservation details """
+    select_duration = Select(driver.find_element(By.NAME, "Duration"))
+    select_duration.select_by_value(DURATION)
 
-    password = driver.find_element(By.NAME, "password")
-    password.send_keys(CODE)
-
-    submit_res = driver.find_element(By.NAME, "submit_paypal")
+    submit_res = driver.find_element(By.ID, "SaveReservation")
     submit_res.click()
     driver.implicitly_wait(5)
 
