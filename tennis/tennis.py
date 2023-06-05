@@ -61,12 +61,6 @@ def book_tennis_automated(res):
     submit_res.click()
     driver.implicitly_wait(5)
 
-    """check if the reservation passed """
-    try :
-        driver.find_element(By.XPATH, "//*[contains(text(),'Success')]")
-    except:
-        return "fail"
-
     driver.quit()
     return "complete"
 

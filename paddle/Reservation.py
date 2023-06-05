@@ -1,10 +1,10 @@
-from Util import Util
+from tennis.Util import Util
 
 
 class Reservation :
     def __init__(self, code, day, time, court, name1, name2, name3):
 
-        util = Util(1)  # 1 for paddle
+        util = Util(0)  # 1 for tennis, 0 for paddle
 
         self.code = code
         self.day = util.calc_day_val(day)

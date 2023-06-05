@@ -1,10 +1,9 @@
 from Util import Util
 
-
 class Reservation :
     def __init__(self, username, password, timeslot, court, duration ):
 
-        util = Util(0)  # 1 for paddle
+        util = Util(1)  # 1 for tennis
 
         self.username = username
         self.password = password
