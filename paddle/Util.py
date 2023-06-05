@@ -1,14 +1,9 @@
-from datetime import date
-
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.select import Select
-
 
 class Util:
 
     def __init__(self, paddle):
-        self.times = self.init_times(paddle)
+        self.times = {}
+        self.init_times(paddle)
 
     def init_times(self, bin):
         # 0 = paddle, 1 = tennis
