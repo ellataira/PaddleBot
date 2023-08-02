@@ -2,6 +2,7 @@
 from selenium.webdriver.support.select import Select
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
 
 
 def book_tennis_automated(res):
@@ -13,11 +14,11 @@ def book_tennis_automated(res):
 
 
     """ Initialising a Chrome instance """
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome(ChromeDriverManager().install())
 
     """ Enter the URL of the website"""
     driver.get("https://sites.onlinecourtreservations.com/reservations")
-    driver.implicitly_wait(10)
+    driver.implicitly_wait(5)
 
     """ select location """
     select_location = Select(driver.find_element(By.NAME, "facility_num"))
@@ -51,7 +52,6 @@ def book_tennis_automated(res):
 
     timeslot = driver.find_element(By.XPATH, timeslot_with_court)
     timeslot.click()
-    driver.implicitly_wait(5)
 
     """fill in reservation details """
     select_duration = Select(driver.find_element(By.NAME, "Duration"))
@@ -59,7 +59,6 @@ def book_tennis_automated(res):
 
     submit_res = driver.find_element(By.ID, "SaveReservation")
     submit_res.click()
-    driver.implicitly_wait(5)
 
     driver.quit()
     return "complete"
