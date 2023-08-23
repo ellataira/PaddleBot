@@ -9,7 +9,8 @@ def make_res(res):
           "time: " + res.timeslot +
           "\nfor court " + res.court +
           "\nunder " + res.username  +
-          "\npw: " + res.password + "\n")
+          "\npw: " + res.password +
+          "\ndays in advance: " + res.days_in_advance + "\n")
 
     traceback.print_exc()
 

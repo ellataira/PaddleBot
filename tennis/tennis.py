@@ -11,6 +11,7 @@ def book_tennis_automated(res):
     TIMESLOT = res.timeslot
     COURT = res.court
     DURATION = res.duration
+    DAYS_ADV = res.days_in_advance
 
 
     """ Initialising a Chrome instance """
@@ -39,18 +40,19 @@ def book_tennis_automated(res):
     enter = driver.find_element(By.XPATH, '//*[@id="CheckUser"]')
     enter.click()
 
-    """ go to date first """
-    # skip forward by 1 week
-    next_week = driver.find_element(By.ID, "NextWeek")
-    next_week.click()
+    """navigate to time slot view """
+    # use util method to find correct row by dict
+    timeslot_path = '/html/body/div[1]/form/p[2]/table/tbody/tr[{}]/td[1]'.format(TIMESLOT)
+    timeslot_view = driver.find_element(By.XPATH, timeslot_path)
+    timeslot_view.click()
 
-    """calculating coordinate of court-timeslot object in table """
-    # select timeslot
-    timeslot_path = '/html/body/div[1]/form/p[2]/table/tbody/tr[{}]'.format(TIMESLOT)
-    # the court column index is court_number + 1
-    timeslot_with_court = timeslot_path + '/td[{}]'.format(str(int(COURT) + 1))
+    """find date and court"""
+    # date = 1 (today) + days in advance
+    # e.g. to book for one week ahead, date = 1 + 7 = 8
+    book_on_date = "/html/body/form/p[2]/table/tbody/tr[{}]".format(str(int(DAYS_ADV) + 1))
+    book_on_date_at_court = book_on_date + '/td[{}]'.format(str(int(COURT) + 1))
 
-    timeslot = driver.find_element(By.XPATH, timeslot_with_court)
+    timeslot = driver.find_element(By.XPATH, book_on_date_at_court)
     timeslot.click()
 
     """fill in reservation details """
@@ -63,3 +65,28 @@ def book_tennis_automated(res):
     driver.quit()
     return "complete"
 
+    """
+    TODO: 
+    navigate to time slot and click to see calendar     
+        > 6:00
+    find row by date 
+        > 8/23 = row 5 , etc. 
+        today's row is at tr[1]
+            /html/body/form/p[2]/table/tbody/tr[1]
+        so, for one week in advance, go to  (today + 7)
+            /html/body/form/p[2]/table/tbody/tr[8]
+
+    find court 
+
+        c3 with no prior bookings: /html/body/form/p[2]/table/tbody/tr[5]/td[4]
+        c3 with prior booking: /html/body/form/p[2]/table/tbody/tr[4]/td[4]
+        c4 no prior: /html/body/form/p[2]/table/tbody/tr[5]/td[5]
+        c4 prior: /html/body/form/p[2]/table/tbody/tr[4]/td[5]
+
+        /td[1 + court_no] 
+
+    click 
+
+    fill in res details 
+
+    """
