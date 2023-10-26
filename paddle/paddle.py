@@ -2,11 +2,12 @@
 from selenium.webdriver.support.select import Select
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
 
 
 def book_paddle_automated(res):
     CODE = res.code
-    DAY = res.day
+    DAY = res.converted_day
     TIME_INDEX = res.time
     COURT_INDEX = res.court
     NAME0 = res.name1
@@ -16,7 +17,7 @@ def book_paddle_automated(res):
 
 
     """ Initialising a Chrome instance """
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome(ChromeDriverManager().install())
 
     """ Enter the URL of the website"""
     driver.get("https://www.registration-software.net/cgi-bin/scheduling/rfparks/schedule.cgi")
@@ -29,9 +30,9 @@ def book_paddle_automated(res):
     sign_in_button = driver.find_element(By.XPATH, "//input[@type='submit']")
     sign_in_button.click()
 
-    """select correct day from drop-down menu --- uses variable DAY """
+    """select correct converted_day from drop-down menu --- uses variable DAY """
     select_day = Select(driver.find_element(By.NAME, "selected_day"))
-    select_day.select_by_value(DAY)
+    select_day.select_by_value(DAY) 
     driver.implicitly_wait(5)
 
     """calculating coordinate of item in table """

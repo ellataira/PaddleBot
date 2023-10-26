@@ -60,17 +60,33 @@ class Util:
 
 
     def calc_day_val(self, day):
-        start = 218  # 218 is value for jan 14, 2023 -- not sure how else to deal with select
+        # start = 218  # 218 is value for jan 14, 2023 -- not sure how else to deal with select
+        start = 31  # 218 is value for oct 4, 2023 -- not sure how else to deal with select
         m, d = int(day[0]), int(day[1])
 
-        months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 20, 31]
+        months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
-        if m == 1:
-            return str(start + (d - 14))
+        # if m == 1:
+        #     return str(start + (d - 14))
 
-        start += 17  # end month of january
-        for i in range(1, m - 1):
-            start += months[i]
+        if m == 10: # if october
+            return str(start + (d - 4))
+
+        # start += 17  # end month of january --- 31 - 14 = 17
+
+        start += 27 # end month of oct -- 31 - 4 = 27
+
+        if m < 10:
+            # finish up 2023 months
+            start += months[11]
+            start += months[12]
+            # then can add 2024 months
+            for i in range(1, m - 1):
+                start += months[i]
+
+        if m > 10:
+            for i in range(10, m - 1):
+                start += months[i]
 
         start += d
         return str(start)
@@ -84,3 +100,4 @@ class Util:
         }
 
         return str(durs[duration])
+
