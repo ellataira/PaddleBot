@@ -28,7 +28,6 @@ def court1():
     ## court data in .gitignore file which contains Reservation.py()s of booking info
     make_res(data.COURT1)
 
-
 def court2():
     make_res(data.COURT2)
 
@@ -36,5 +35,12 @@ def court2():
 if __name__ == "__main__":
     print(str(date.today()) + "\n\n")
 
-    court1()
-    court2()
+    try:
+        court1()
+    except:
+        print("court 1 failed\n")
+
+    try:
+        court2()
+    except:
+        print("court 2 failed\n")
