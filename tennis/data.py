@@ -12,4 +12,4 @@ class data:
 
     COURT2 = Reservation("Wtmcneill3@gmail.com", "Roscoe@1", "17:00", "4", "1.5", "7")
 
-    COURT3 = Reservation("rckrause@gmail.com", "40Luv@RFTC", "17:00", "5", "1.5", "7")
+    COURT3 = Reservation("rckrause@gmail.com", "40Luv@RFTC", "17:00", "5", "1.5", "1")

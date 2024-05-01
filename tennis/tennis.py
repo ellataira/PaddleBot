@@ -2,7 +2,7 @@
 from selenium.webdriver.support.select import Select
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
+# from webdriver_manager.chrome import ChromeDriverManager
 
 
 def book_tennis_automated(res):
@@ -13,19 +13,18 @@ def book_tennis_automated(res):
     DURATION = res.duration
     DAYS_ADV = res.days_in_advance
 
-
-    """ Initialising a Chrome instance """
-    driver = webdriver.Chrome(ChromeDriverManager().install())
+    driver = webdriver.Chrome()
 
     """ Enter the URL of the website"""
-    driver.get("https://sites.onlinecourtreservations.com/reservations")
+    driver.get("https://rftc.onlinecourtreservations.com/reservations")
     driver.implicitly_wait(5)
 
     """ select location """
-    select_location = Select(driver.find_element(By.NAME, "facility_num"))
-    select_location.select_by_value("188") # 188 corresponds to 'RFTC'
-    select_location_button = driver.find_element(By.NAME, "btnSubmit")
-    select_location_button.click()
+    # depricated on new website
+    # select_location = Select(driver.find_element(By.NAME, "facility_num"))
+    # select_location.select_by_value("188") # 188 corresponds to 'RFTC'
+    # select_location_button = driver.find_element(By.NAME, "btnSubmit")
+    # select_location_button.click()
 
     """sign in """
     sign_in = driver.find_element(By.XPATH, "/html/body/div[1]/form/p[1]/table[1]/tbody/tr/td[2]/nav/ul/li[2]/a")
