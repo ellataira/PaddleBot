@@ -32,8 +32,17 @@ jobs:
           wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
           sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt-get -fy install
 
+      - name: Navigate to paddle directory
+        run: cd paddle
+
+      - name: Verify File Structure
+        run: |
+          cd paddle
+          ls -la
+
       - name: Run Paddle Booking Automation
         run: |
+          cd paddle
           Xvfb :99 -ac &
           export DISPLAY=:99
           python main.py
