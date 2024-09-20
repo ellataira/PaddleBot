@@ -5,11 +5,9 @@ from data import data
 
 
 def make_res(res):
-    print("attempting to reserve: \n" +
-          "converted_day: " + str(res.day) + " at " + res.time +
-          "\nconverted day to " + res.converted_day +
+    print("attempting to reserve 1 week in advance: \n" +
           "\nfor court " + res.court +
-          "\nunder " + res.name1 + ", " + res.name2 + ", " + res.name3 +
+          "\nunder " + str(res.names) +
           "\ncode: " + res.code + "\n")
 
     court = book_paddle_automated(res)
