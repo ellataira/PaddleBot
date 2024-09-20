@@ -2,7 +2,7 @@ name: Paddle Booking Automation
 
 on:
   schedule:
-    - cron: '33 14 * * 4'
+    - cron: '35 1 * * 4'
 
 jobs:
   selenium-job:
