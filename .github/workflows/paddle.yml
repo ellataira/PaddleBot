@@ -32,21 +32,8 @@ jobs:
           wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
           sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt-get -fy install
 
-      - name: Set up chromedriver
-        run: |
-          wget -N https://chromedriver.storage.googleapis.com/`curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE`/chromedriver_linux64.zip
-          unzip chromedriver_linux64.zip -d /usr/local/bin/
-          sudo chmod +x /usr/local/bin/chromedriver
-
-      - name: Navigate to paddle directory
-        run: cd paddle
-
-      - name: Verify File Structure
-        run: |
-          ls -la
-
       - name: Run Paddle Booking Automation
         run: |
           Xvfb :99 -ac &
           export DISPLAY=:99
-          python main.py
+          python /home/runner/work/PaddleBot/PaddleBot/paddle/main.py
