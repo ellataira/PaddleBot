@@ -1,6 +1,9 @@
 name: Paddle Booking Automation
 
 on:
+  push:
+    branches:
+      - main
   schedule:
     - cron: '40 1 * * 5'
 
