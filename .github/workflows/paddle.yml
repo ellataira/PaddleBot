@@ -1,11 +1,12 @@
 name: Paddle Booking Automation
 
 on:
-  push:
-    branches:
-      - main
+#  push:
+#    branches:
+#      - main
   schedule:
     - cron: '15 14 * * 5'
+  workflow_dispatch:
 
 jobs:
   selenium-job:
