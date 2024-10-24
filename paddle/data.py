@@ -8,8 +8,7 @@ class data:
     # NAME0 = "Taira, Kelly"
     # NAME1 = "Krause, Ron"
     # NAME2 = "Hoyt, Mark"
-    pass
-    # COURT1 = Reservation("35780", "16:30", "1", "Taira, Kelly", "Hoyt, Mark", "Iammartino, Mark")
+    COURT1 = Reservation("35780", "16:30", "1", "Taira, Kelly", "Hoyt, Mark", "Iammartino, Mark")
 
     # CODE = "11682"
     # DAY = ["1", "26"]  # [month, converted_day]
@@ -19,4 +18,4 @@ class data:
     # NAME1 = "Lundak, Dan"
     # NAME2 = "Condon, Sean"
 
-    # COURT2 = Reservation("11682", "16:30",  "1", "Krause, Ron", "Lundak, Dan", "Burns, Mike")
+    COURT2 = Reservation("11682", "16:30",  "1", "Krause, Ron", "Lundak, Dan", "Burns, Mike")

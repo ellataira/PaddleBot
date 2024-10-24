@@ -3,16 +3,22 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.chrome.service import Service
-
+from selenium.webdriver.chrome.options import Options
 
 # from webdriver_manager.chrome import ChromeDriverManager
 
 def book_paddle_automated(res):
+    """ Initializing a Chrome instance in headless mode """
+    options = Options()
+    options.add_argument('--headless')  # Enable headless mode
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+
+    driver = webdriver.Chrome(options=options)
     """Automates the paddle court booking process using Selenium."""
 
     # Initialize a Chrome instance (you can use ChromeDriverManager for automatic setup)
     # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-    driver = webdriver.Chrome()
 
     try:
         # Enter the URL of the website
