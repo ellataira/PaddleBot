@@ -70,5 +70,4 @@ def book_paddle_automated(res):
         # Always close the browser window
         driver.quit()
 
-    driver.implicitly_wait(2)
     return result
