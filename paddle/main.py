@@ -50,7 +50,7 @@ if __name__ == "__main__":
     except:
         print("court 1 failed\n")
 
-    # try:
-    #     court2()
-    # except:
-    #     print("court 2 failed\n")
+    try:
+        court2()
+    except:
+        print("court 2 failed\n")
