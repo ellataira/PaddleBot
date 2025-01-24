@@ -11,7 +11,7 @@ class data:
     # NAME2 = "Hoyt, Mark"
     COURT1 = Reservation(
         "35780",
-        "16:30",
+        "15:00",
         "1",
         "Taira, Kelly",
         "Hoyt, Mark",
