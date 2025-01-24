@@ -21,16 +21,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install selenium webdriver-manager
 
-      - name: Install Chrome
+      - name: Install Chromium
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y wget unzip xvfb libxi6 libgconf-2-4 || sudo apt-get install -y libgconf-2-4:i386
-          wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O google-chrome-stable.deb
-          sudo dpkg -i google-chrome-stable.deb || sudo apt-get install -fy
-          rm -f google-chrome-stable.deb
+          sudo apt-get install -y chromium-browser
 
-      - name: Run Paddle Booking Automation
+      - name: Set up Xvfb (Virtual Display)
         run: |
+          sudo apt-get install -y xvfb
           Xvfb :99 -ac &
           export DISPLAY=:99
+
+      - name: Run Paddle Booking Automation
+        env:
+          DISPLAY: :99
+        run: |
           python /home/runner/work/PaddleBot/PaddleBot/paddle/main.py
