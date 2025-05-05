@@ -2,9 +2,6 @@ name: Tennis Court Reservation Automation
 
 on:
   workflow_dispatch:  # Manual trigger
-  schedule:
-    # Run at 8:00 AM UTC every day (adjust as needed)
-    - cron: '0 8 * * *'
 
 jobs:
   book-courts:

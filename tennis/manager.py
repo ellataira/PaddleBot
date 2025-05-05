@@ -60,9 +60,9 @@ class ReservationManager:
         # Find config file - check different possible locations
         if not config_path:
             possible_paths = [
-                '.github/workflows/tennis_config.yaml',
-                '../.github/workflows/tennis_config.yaml',
-                'tennis_config.yaml'
+                'tennis_config.yaml',           # Current directory
+                '../tennis_config.yaml',        # Parent directory
+                '../../tennis_config.yaml',     # Two levels up
             ]
 
             for path in possible_paths:
