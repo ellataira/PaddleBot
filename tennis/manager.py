@@ -7,7 +7,7 @@ from selenium.webdriver.support.select import Select
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from selenium.common.exceptions import TimeoutException, NoSuchElementException, StaleElementReferenceException
 from datetime import date, datetime
 import traceback
 import logging
@@ -60,9 +60,10 @@ class ReservationManager:
         # Find config file - check different possible locations
         if not config_path:
             possible_paths = [
-                'tennis_config.yaml',           # Current directory
-                '../tennis_config.yaml',        # Parent directory
-                '../../tennis_config.yaml',     # Two levels up
+                'tennis_config.yaml',  # Current directory
+                '../tennis_config.yaml',  # Parent directory
+                '.github/workflows/tennis_config.yaml',
+                '../.github/workflows/tennis_config.yaml',
             ]
 
             for path in possible_paths:
@@ -148,12 +149,30 @@ class ReservationManager:
         self.logger.info(f"Finding cell for day {day_index}, court {court_num}, timeslot {timeslot_value}")
 
         try:
-            # Try direct XPath approach
-            xpath = f"/html/body/form/p[2]/table/tbody/tr[{day_index}]/td[{court_num + 1}]"
-            wait = WebDriverWait(driver, 5)
-            cell = wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
+            # Try to find all cells in the row
+            row_xpath = f"/html/body/form/p[2]/table/tbody/tr[{day_index}]"
+            row = WebDriverWait(driver, 5).until(
+                EC.presence_of_element_located((By.XPATH, row_xpath))
+            )
 
-            # Get cell attributes
+            # Get all cells in the row
+            cells = row.find_elements(By.TAG_NAME, "td")
+            self.logger.info(f"Found {len(cells)} cells in the row")
+
+            # Now find the cell for the specific court number
+            # Court columns start at index 1 (index 0 is the time column)
+            # But the court numbers in the HTML are 1-based, so we don't need to adjust
+            court_idx = int(court_num)
+
+            # Check if the court_idx is valid
+            if court_idx >= len(cells) - 1:  # -1 because the last cell is also a time column
+                self.logger.error(f"Court index {court_idx} is out of bounds")
+                return None
+
+            # Get the cell
+            cell = cells[court_idx]
+
+            # Check the cell attributes
             class_attr = cell.get_attribute("class")
             title_attr = cell.get_attribute("title") or cell.get_attribute("oldtitle") or ""
 
@@ -165,7 +184,7 @@ class ReservationManager:
                 self.logger.info("Cell is available for booking")
                 return cell
             else:
-                # If the cell is not available for any reason, return None
+                # If the cell is not available, log the reason
                 if "G" in class_attr:
                     self.logger.info("Cell is already booked")
                 elif "restricted" in class_attr:
@@ -178,46 +197,101 @@ class ReservationManager:
             self.logger.error(f"Error finding cell: {str(e)}")
             return None
 
-    def _check_for_booked_cells_by_user(self, driver, username):
+    def _is_cell_for_court(self, cell, court_num):
         """
-        Check the page for any cells booked by the specified user
+        Check if a cell is for a specific court by examining its onclick attribute
+
+        Args:
+            cell: The cell WebElement
+            court_num: The court number to check for
+
+        Returns:
+            bool: True if the cell is for the specified court, False otherwise
+        """
+        try:
+            onclick = cell.get_attribute("onclick")
+            if onclick and f"SingleCourtView('{court_num}')" in onclick:
+                return True
+
+            # Also check for Reserve function with court number
+            if onclick and f"Reserve('{court_num}'" in onclick:
+                return True
+
+            return False
+        except:
+            return False
+
+    def _check_for_user_booking(self, driver, username, court_num=None):
+        """
+        Check if the user already has a booking by examining all cells on the page
 
         Args:
             driver: Selenium webdriver
             username: Username to check for
+            court_num: Optional court number to check for specifically
 
         Returns:
-            bool: True if any cells are found booked by the user, False otherwise
+            bool: True if the user has a booking, False otherwise
         """
-        self.logger.info(f"Checking for cells booked by: {username}")
+        self.logger.info(f"Checking if {username} has a booking on court {court_num if court_num else 'any'}")
 
-        try:
-            # Find all cells with G class (booked cells)
-            all_cells = driver.find_elements(By.CSS_SELECTOR, "td")
-            self.logger.info(f"Found {len(all_cells)} total cells")
+        # Attempt to handle stale element references by refreshing the elements multiple times if needed
+        max_attempts = 3
+        for attempt in range(max_attempts):
+            try:
+                # Get all cells on the page
+                cells = driver.find_elements(By.TAG_NAME, "td")
 
-            # Check each cell for the username in title/oldtitle
-            for cell in all_cells:
-                class_attr = cell.get_attribute("class") or ""
-                if "G" in class_attr:
-                    title = cell.get_attribute("title") or cell.get_attribute("oldtitle") or ""
-                    self.logger.info(f"Found booked cell with title: {title}")
+                # Check each cell for the username
+                for cell in cells:
+                    try:
+                        # Check if this is a booked cell (G class)
+                        class_attr = cell.get_attribute("class") or ""
+                        if "G" in class_attr:
+                            # Check the title or oldtitle for the username
+                            title = cell.get_attribute("title") or cell.get_attribute("oldtitle") or ""
 
-                    # Check if this cell is booked by our user
-                    if username.lower() in title.lower():
-                        self.logger.info(f"Found cell booked by {username}")
-                        return True
+                            # If the username is found in the title
+                            if username.lower() in title.lower():
+                                self.logger.info(f"Found cell booked by {username}: {title}")
 
-            self.logger.info(f"No cells found booked by {username}")
-            return False
+                                # If a specific court is specified, try to determine if this is for that court
+                                if court_num:
+                                    # Extract court number from the cell properties if possible
+                                    # This is difficult and might not be reliable
 
-        except Exception as e:
-            self.logger.error(f"Error checking for booked cells: {str(e)}")
-            return False
+                                    # Try to check surrounding cells to determine the court
+                                    self.logger.info(
+                                        "Court number specified, but cannot reliably determine court from cell")
+
+                                    # For now, assume it's a match
+                                    self.logger.info(f"Assuming the booking is for court {court_num}")
+
+                                return True
+                    except StaleElementReferenceException:
+                        # Skip this cell if it's stale
+                        continue
+
+                # If we got here, no booking was found
+                self.logger.info(f"No booking found for {username}")
+                return False
+
+            except Exception as e:
+                if "stale element reference" in str(e).lower() and attempt < max_attempts - 1:
+                    self.logger.info(f"Stale element reference encountered, retrying ({attempt + 1}/{max_attempts})")
+                    time.sleep(1)  # Wait a bit before retrying
+                    continue
+                else:
+                    self.logger.error(f"Error checking for user booking: {str(e)}")
+                    return False
+
+        # If we get here, all attempts failed
+        self.logger.error("All attempts to check for user booking failed")
+        return False
 
     def book_reservation(self, reservation):
         """
-        Book a single reservation and check if it was successful
+        Book a single reservation
 
         Args:
             reservation: Reservation object to book
@@ -232,10 +306,15 @@ class ReservationManager:
         try:
             # Set up Chrome driver with options
             chrome_options = Options()
-            if 'CI' in os.environ:
-                chrome_options.add_argument('--headless')
+
+            # Always run headless in CI environment or if HEADLESS env var is set
+            if 'CI' in os.environ or os.environ.get('HEADLESS', '').lower() in ('true', '1', 'yes'):
+                self.logger.info("Running in headless mode")
+                chrome_options.add_argument('--headless=new')  # Use the newer headless mode
                 chrome_options.add_argument('--no-sandbox')
                 chrome_options.add_argument('--disable-dev-shm-usage')
+                chrome_options.add_argument('--disable-gpu')
+                chrome_options.add_argument('--window-size=1920,1080')  # Set a reasonable window size
 
             driver = webdriver.Chrome(options=chrome_options)
             driver.set_page_load_timeout(30)  # Set timeout to avoid hanging
@@ -274,8 +353,8 @@ class ReservationManager:
                 lambda d: len(d.find_elements(By.CSS_SELECTOR, "td")) > 0
             )
 
-            # First check if the user already has a booking
-            if self._check_for_booked_cells_by_user(driver, reservation.username):
+            # Check if the user already has a booking on any court
+            if self._check_for_user_booking(driver, reservation.username):
                 self.logger.info(f"User {reservation.username} already has a booking. Failing out.")
                 if driver:
                     driver.quit()
@@ -285,10 +364,10 @@ class ReservationManager:
             days_ahead = int(reservation.days_in_advance) + 1
             court_column = int(reservation.court)
 
-            # Find the cell - will return None if already booked or restricted
+            # Find the cell
             cell = self._find_available_cell(driver, days_ahead, court_column, reservation.timeslot)
 
-            # If no available cell found, fail immediately
+            # If no available cell found, fail
             if cell is None:
                 self.logger.info(
                     f"Court {reservation.court} at time {reservation.raw_timeslot} is not available. Marking as failure.")
@@ -315,45 +394,41 @@ class ReservationManager:
                 )
                 submit_res.click()
 
-                # Look for confirmation message first
-                confirmation_found = False
+                # Look for confirmation message
                 try:
                     confirmation = WebDriverWait(driver, 5).until(
                         EC.presence_of_element_located((By.XPATH, "//td[contains(text(), 'Reservation Scheduled')]"))
                     )
                     self.logger.info(f"Confirmation message: {confirmation.text}")
-                    confirmation_found = True
-                except:
-                    self.logger.warning("No confirmation message found. Will check by looking for booked cells.")
-
-                # If confirmation found, return success
-                if confirmation_found:
-                    self.logger.info("Booking confirmed via confirmation message")
                     if driver:
                         driver.quit()
                     return True
+                except:
+                    # If confirmation not found, check by refreshing the page and looking for the booking
+                    self.logger.warning("No confirmation message found")
 
-                # If no confirmation, click on the time slot view again to check for booked cells
-                try:
-                    WebDriverWait(driver, 10).until(
-                        lambda d: len(d.find_elements(By.CSS_SELECTOR, "td")) > 0
-                    )
+                    # Navigate back to the time slot view
+                    try:
+                        back_button = driver.find_element(By.XPATH, "//input[@value='Back to Time Slots']")
+                        back_button.click()
+                        time.sleep(2)  # Wait for page to load
+                    except:
+                        # If back button not found, just go to the time slots page again
+                        timeslot_view = driver.find_element(By.XPATH, timeslot_path)
+                        timeslot_view.click()
+                        time.sleep(2)  # Wait for page to load
 
-                    if self._check_for_booked_cells_by_user(driver, reservation.username):
-                        self.logger.info(f"Verification successful: Found cell booked by {reservation.username}")
+                    # Check if the booking now exists
+                    if self._check_for_user_booking(driver, reservation.username, reservation.court):
+                        self.logger.info(f"Booking confirmed after page refresh")
                         if driver:
                             driver.quit()
                         return True
                     else:
-                        self.logger.warning(f"Verification failed: No cells found booked by {reservation.username}")
-                except Exception as e:
-                    self.logger.error(f"Error during final verification: {str(e)}")
-
-                # If we got here, no confirmation was found
-                self.logger.warning("Booking likely failed - no confirmation and no booked cells found")
-                if driver:
-                    driver.quit()
-                return False
+                        self.logger.warning("Booking not found after page refresh")
+                        if driver:
+                            driver.quit()
+                        return False
 
             except Exception as e:
                 self.logger.error(f"Error during booking process: {str(e)}")

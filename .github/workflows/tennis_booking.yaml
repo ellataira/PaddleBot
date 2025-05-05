@@ -38,23 +38,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install selenium webdriver-manager pyyaml
 
-      - name: Install Chromium and related tools
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y chromium-browser
-          sudo apt-get install -y xvfb
-
-      - name: Set up virtual display
-        run: |
-          Xvfb :99 -ac &
-          echo "DISPLAY=:99" >> $GITHUB_ENV
-
-      - name: Run tennis reservation system
+      - name: Run tennis reservation system (headless)
         run: |
           cd tennis
           python main.py --court "${{ github.event.inputs.court }}" --username "${{ github.event.inputs.username }}" --timeslot "${{ github.event.inputs.timeslot }}" --days-advance "${{ github.event.inputs.days_in_advance }}"
         env:
           CI: "true"
+          HEADLESS: "true"
 
       - name: Upload logs as artifacts
         if: always()  # Run even if previous steps fail
