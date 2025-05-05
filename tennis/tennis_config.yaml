@@ -63,7 +63,7 @@ reservations:
     timeslot: "17:30"
     court: "3"
     duration: "1.5"
-    days_in_advance: "3"
+    days_in_advance: "4"
     enabled: true
 
   - name: COURT2
@@ -72,7 +72,7 @@ reservations:
     timeslot: "17:30"
     court: "4"
     duration: "1.5"
-    days_in_advance: "3"
+    days_in_advance: "4"
     enabled: true
 
   - name: COURT3
@@ -81,6 +81,6 @@ reservations:
     timeslot: "17:30"
     court: "5"
     duration: "1.5"
-    days_in_advance: "3"
+    days_in_advance: "4"
     enabled: true
 
