@@ -366,16 +366,9 @@ class ReservationManager:
                     # If confirmation not found, check by refreshing the page and looking for the booking
                     self.logger.warning("No confirmation message found")
 
-                    # Navigate back to the time slot view
-                    try:
-                        back_button = driver.find_element(By.XPATH, "//input[@value='Back to Time Slots']")
-                        back_button.click()
-                        time.sleep(2)  # Wait for page to load
-                    except:
-                        # If back button not found, just go to the time slots page again
-                        timeslot_view = driver.find_element(By.XPATH, timeslot_path)
-                        timeslot_view.click()
-                        time.sleep(2)  # Wait for page to load
+                    WebDriverWait(driver, 10).until(
+                        lambda d: len(d.find_elements(By.CSS_SELECTOR, "td")) > 0
+                    )
 
                     # Check if the user now has a booking on that day
                     if self._check_for_booking_on_same_day(driver, reservation.username, days_ahead):
