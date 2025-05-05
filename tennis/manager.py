@@ -188,7 +188,9 @@ class ReservationManager:
                 if "G" in class_attr:
                     self.logger.info("Cell is already booked")
                 elif "restricted" in class_attr:
-                    self.logger.info("Cell is restricted")
+                    # Check if it's restricted because of existing reservations
+                    restrict_attr = cell.get_attribute("data-restrict") or ""
+                    self.logger.info(f"Cell is restricted: {restrict_attr}")
                 else:
                     self.logger.info(f"Cell is not available: {class_attr}")
                 return None
@@ -197,97 +199,54 @@ class ReservationManager:
             self.logger.error(f"Error finding cell: {str(e)}")
             return None
 
-    def _is_cell_for_court(self, cell, court_num):
+    def _check_for_booking_on_same_day(self, driver, username, target_day_index):
         """
-        Check if a cell is for a specific court by examining its onclick attribute
-
-        Args:
-            cell: The cell WebElement
-            court_num: The court number to check for
-
-        Returns:
-            bool: True if the cell is for the specified court, False otherwise
-        """
-        try:
-            onclick = cell.get_attribute("onclick")
-            if onclick and f"SingleCourtView('{court_num}')" in onclick:
-                return True
-
-            # Also check for Reserve function with court number
-            if onclick and f"Reserve('{court_num}'" in onclick:
-                return True
-
-            return False
-        except:
-            return False
-
-    def _check_for_user_booking(self, driver, username, court_num=None):
-        """
-        Check if the user already has a booking by examining all cells on the page
+        Check if the user already has a booking on the specific day
 
         Args:
             driver: Selenium webdriver
             username: Username to check for
-            court_num: Optional court number to check for specifically
+            target_day_index: The day index we're trying to book for
 
         Returns:
-            bool: True if the user has a booking, False otherwise
+            bool: True if user has a booking on the specified day, False otherwise
         """
-        self.logger.info(f"Checking if {username} has a booking on court {court_num if court_num else 'any'}")
+        self.logger.info(f"Checking if {username} has a booking on day index {target_day_index}")
 
-        # Attempt to handle stale element references by refreshing the elements multiple times if needed
-        max_attempts = 3
-        for attempt in range(max_attempts):
+        try:
+            # First check if we can find reservation info directly on the page
+            row_xpath = f"/html/body/form/p[2]/table/tbody/tr[{target_day_index}]"
             try:
-                # Get all cells on the page
-                cells = driver.find_elements(By.TAG_NAME, "td")
+                row = driver.find_element(By.XPATH, row_xpath)
+                cells = row.find_elements(By.TAG_NAME, "td")
 
-                # Check each cell for the username
                 for cell in cells:
                     try:
-                        # Check if this is a booked cell (G class)
                         class_attr = cell.get_attribute("class") or ""
                         if "G" in class_attr:
-                            # Check the title or oldtitle for the username
                             title = cell.get_attribute("title") or cell.get_attribute("oldtitle") or ""
-
-                            # If the username is found in the title
                             if username.lower() in title.lower():
-                                self.logger.info(f"Found cell booked by {username}: {title}")
-
-                                # If a specific court is specified, try to determine if this is for that court
-                                if court_num:
-                                    # Extract court number from the cell properties if possible
-                                    # This is difficult and might not be reliable
-
-                                    # Try to check surrounding cells to determine the court
-                                    self.logger.info(
-                                        "Court number specified, but cannot reliably determine court from cell")
-
-                                    # For now, assume it's a match
-                                    self.logger.info(f"Assuming the booking is for court {court_num}")
-
+                                self.logger.info(f"Found booking by {username} on day {target_day_index}")
                                 return True
-                    except StaleElementReferenceException:
-                        # Skip this cell if it's stale
+                    except:
                         continue
+            except:
+                # If we can't find the row, skip this check
+                pass
 
-                # If we got here, no booking was found
-                self.logger.info(f"No booking found for {username}")
-                return False
+            # Check data-restrict attributes which may indicate booking restrictions
+            cells = driver.find_elements(By.CSS_SELECTOR, f"tr:nth-child({target_day_index}) td[data-restrict]")
+            for cell in cells:
+                restrict_text = cell.get_attribute("data-restrict") or ""
+                if "already have" in restrict_text.lower() and "reservation" in restrict_text.lower():
+                    self.logger.info(f"Found restriction indicating user already has booking on day {target_day_index}")
+                    return True
 
-            except Exception as e:
-                if "stale element reference" in str(e).lower() and attempt < max_attempts - 1:
-                    self.logger.info(f"Stale element reference encountered, retrying ({attempt + 1}/{max_attempts})")
-                    time.sleep(1)  # Wait a bit before retrying
-                    continue
-                else:
-                    self.logger.error(f"Error checking for user booking: {str(e)}")
-                    return False
+            return False
 
-        # If we get here, all attempts failed
-        self.logger.error("All attempts to check for user booking failed")
-        return False
+        except Exception as e:
+            self.logger.error(f"Error checking for bookings on same day: {str(e)}")
+            return False
 
     def book_reservation(self, reservation):
         """
@@ -353,27 +312,27 @@ class ReservationManager:
                 lambda d: len(d.find_elements(By.CSS_SELECTOR, "td")) > 0
             )
 
-            # Check if the user already has a booking on any court
-            if self._check_for_user_booking(driver, reservation.username):
-                self.logger.info(f"User {reservation.username} already has a booking. Failing out.")
-                if driver:
-                    driver.quit()
-                return False
-
-            # Find the cell for booking
+            # Calculate day index for booking
             days_ahead = int(reservation.days_in_advance) + 1
             court_column = int(reservation.court)
 
             # Find the cell
             cell = self._find_available_cell(driver, days_ahead, court_column, reservation.timeslot)
 
-            # If no available cell found, fail
+            # If no available cell found, check if it's because user already has booking on that day
             if cell is None:
-                self.logger.info(
-                    f"Court {reservation.court} at time {reservation.raw_timeslot} is not available. Marking as failure.")
-                if driver:
-                    driver.quit()
-                return False
+                if self._check_for_booking_on_same_day(driver, reservation.username, days_ahead):
+                    self.logger.info(
+                        f"User {reservation.username} already has a booking on the target day. Marking as success.")
+                    if driver:
+                        driver.quit()
+                    return True
+                else:
+                    self.logger.info(
+                        f"Court {reservation.court} at time {reservation.raw_timeslot} is not available. Marking as failure.")
+                    if driver:
+                        driver.quit()
+                    return False
 
             # Attempt to book the cell
             try:
@@ -418,8 +377,8 @@ class ReservationManager:
                         timeslot_view.click()
                         time.sleep(2)  # Wait for page to load
 
-                    # Check if the booking now exists
-                    if self._check_for_user_booking(driver, reservation.username, reservation.court):
+                    # Check if the user now has a booking on that day
+                    if self._check_for_booking_on_same_day(driver, reservation.username, days_ahead):
                         self.logger.info(f"Booking confirmed after page refresh")
                         if driver:
                             driver.quit()
