@@ -35,6 +35,8 @@ def main():
                         help='Specific courts to book (default: COURT1 COURT2 COURT3)')
     parser.add_argument('--username',
                         help='Override username for booking')
+    parser.add_argument('--password',
+                        help='Override password for booking')
     parser.add_argument('--court',
                         help='Override court number for booking')
     parser.add_argument('--timeslot',
@@ -68,7 +70,7 @@ def main():
         return
 
     # Check if we have override values from command line
-    have_overrides = any([args.username, args.court, args.timeslot, args.days_advance])
+    have_overrides = any([args.username, args.password, args.court, args.timeslot, args.days_advance])
 
     # Process the reservations
     if have_overrides:
@@ -79,6 +81,9 @@ def main():
                 if args.username:
                     logging.info(f"Overriding username: {args.username}")
                     reservation.username = args.username
+                if args.password:
+                    logging.info(f"Overriding password: {args.password}")
+                    reservation.password = args.password
                 if args.court:
                     logging.info(f"Overriding court: {args.court}")
                     reservation.court = args.court

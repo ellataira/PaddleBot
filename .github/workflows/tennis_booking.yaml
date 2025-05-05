@@ -7,6 +7,10 @@ on:
         description: 'Username for booking (leave empty to book 3 default courts)'
         required: false
         type: string
+      password:
+        description: 'Password for booking (leave empty to book 3 default courts)'
+        required: false
+        type: string
       court:
         description: 'Court number (leave empty to book 3 default courts)'
         required: false
@@ -41,7 +45,7 @@ jobs:
       - name: Run tennis reservation system (headless)
         run: |
           cd tennis
-          python main.py --court "${{ github.event.inputs.court }}" --username "${{ github.event.inputs.username }}" --timeslot "${{ github.event.inputs.timeslot }}" --days-advance "${{ github.event.inputs.days_in_advance }}"
+          python main.py --court "${{ github.event.inputs.court }}" --username "${{ github.event.inputs.username }}" --password "${{ github.event.inputs.password }}" --timeslot "${{ github.event.inputs.timeslot }}" --days-advance "${{ github.event.inputs.days_in_advance }}"
         env:
           CI: "true"
           HEADLESS: "true"
