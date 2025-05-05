@@ -34,7 +34,7 @@ def make_res(res):
 
 
 def court1():
-    ## court data in .gitignore file which contains Reservation.py()s of booking info
+    ## court data in .gitignore file which contains type.py()s of booking info
     make_res(data.COURT1)
 
 

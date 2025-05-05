@@ -1,0 +1,51 @@
+name: Tennis Court Reservation Automation
+
+on:
+  workflow_dispatch:  # Manual trigger
+  schedule:
+    # Run at 8:00 AM UTC every day (adjust as needed)
+    - cron: '0 8 * * *'
+
+jobs:
+  book-courts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install selenium webdriver-manager pyyaml
+
+      - name: Install Chromium and related tools
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y chromium-browser
+          sudo apt-get install -y xvfb
+
+      - name: Set up virtual display
+        run: |
+          Xvfb :99 -ac &
+          echo "DISPLAY=:99" >> $GITHUB_ENV
+
+      - name: Run tennis reservation system
+        run: |
+          cd tennis
+          python main.py
+        env:
+          CI: "true"
+
+      - name: Upload logs as artifacts
+        if: always()  # Run even if previous steps fail
+        uses: actions/upload-artifact@v3
+        with:
+          name: reservation-logs
+          path: |
+            tennis/reservations.log

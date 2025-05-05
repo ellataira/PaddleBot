@@ -1,45 +1,80 @@
-import traceback
+#!/usr/bin/env python3
+"""
+Tennis Court Reservation Automation
+-----------------------------------
+Automates the process of booking tennis courts based on YAML configuration.
+"""
+
+import argparse
+import logging
 from datetime import date
-from data import data
-from tennis import book_tennis_automated
+from manager import ReservationManager
 
 
-def make_res(res):
-    print("attempting to reserve: \n" +
-          "time: " + res.timeslot +
-          "\nfor court " + res.court +
-          "\nunder " + res.username  +
-          "\npw: " + res.password +
-          "\ndays in advance: " + res.days_in_advance + "\n")
+def book_court(manager, court_name):
+    """Book a specific court from configuration by name"""
+    for reservation in manager.reservations:
+        if reservation.name == court_name:
+            print(f"Booking {court_name}:")
+            print(f"  Time: {reservation.raw_timeslot}")
+            print(f"  Court: {reservation.court}")
+            print(f"  User: {reservation.username}")
+            print(f"  Days in advance: {reservation.days_in_advance}")
 
-    traceback.print_exc()
+            result = manager.book_reservation(reservation)
+            print(f"  Result: {'Success' if result else 'Failed'}\n")
+            return result
 
-    book_tennis_automated(res)
+    print(f"{court_name} configuration not found")
+    return False
 
-def court1():
-    ## court data in .gitignore file which contains Reservation.py()s of booking info
-   make_res(data.COURT1)
 
-def court2():
-    make_res(data.COURT2)
+def main():
+    """Main entry point for the reservation system"""
+    parser = argparse.ArgumentParser(description='Tennis Court Reservation System')
+    parser.add_argument('--config', '-c',
+                        help='Path to configuration file (default: auto-detect)')
+    parser.add_argument('--courts', '-t', nargs='+', default=['COURT1', 'COURT2', 'COURT3'],
+                        help='Specific courts to book (default: COURT1 COURT2 COURT3)')
+    parser.add_argument('--verbose', '-v', action='store_true',
+                        help='Enable verbose logging')
+    args = parser.parse_args()
 
-def court3():
-   make_res(data.COURT3)
+    # Configure logging
+    log_level = logging.DEBUG if args.verbose else logging.INFO
+    logging.basicConfig(
+        level=log_level,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler("reservations.log"),
+            logging.StreamHandler()
+        ]
+    )
+
+    # Print date banner
+    print(f"=== Tennis Court Reservation: {date.today()} ===\n")
+
+    # Initialize the reservation manager
+    try:
+        manager = ReservationManager(args.config)
+    except Exception as e:
+        logging.error(f"Failed to initialize reservation manager: {str(e)}")
+        return
+
+    # Book each requested court
+    results = {}
+    for court in args.courts:
+        try:
+            results[court] = book_court(manager, court)
+        except Exception as e:
+            logging.error(f"Error booking {court}: {str(e)}", exc_info=args.verbose)
+            results[court] = False
+
+    # Print summary
+    print("\n=== Booking Summary ===")
+    for court, success in results.items():
+        print(f"{court}: {'Success' if success else 'Failed'}")
 
 
 if __name__ == "__main__":
-    print(str(date.today()) + "\n\n")
-    try:
-        court1()
-    except:
-        print("court 1 failed\n")
-
-    try:
-        court2()
-    except:
-        print("court 2 failed\n")
-
-    try:
-        court3()
-    except:
-        print("court 3 failed\n")
+    main()

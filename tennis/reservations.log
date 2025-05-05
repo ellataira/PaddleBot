@@ -1,0 +1,130 @@
+=== Tennis Reservation Log Started: 2025-05-05 14:49:53.821106 ===
+
+2025-05-05 14:49:53,821 - INFO - Logger initialized
+2025-05-05 14:49:53,821 - INFO - Loaded configuration from ../.github/workflows/tennis_config.yaml
+2025-05-05 14:49:53,827 - INFO - Loaded reservation: COURT1
+2025-05-05 14:49:53,827 - INFO - Loaded reservation: COURT2
+2025-05-05 14:49:53,827 - INFO - Loaded reservation: COURT3
+2025-05-05 14:49:53,828 - INFO - Attempting to book reservation: COURT1
+2025-05-05 14:49:53,828 - INFO - User: Kelly_taira@bofa.com, Court: 3, Time: 17:30
+2025-05-05 14:49:58,028 - INFO - Checking for cells booked by: Kelly_taira@bofa.com
+2025-05-05 14:49:58,150 - INFO - Found 373 total cells
+2025-05-05 14:49:58,157 - ERROR - Error checking for booked cells: Message: stale element reference: stale element not found
+  (Session info: chrome=135.0.7049.115); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Stacktrace:
+0   chromedriver                        0x00000001063452c8 chromedriver + 6197960
+1   chromedriver                        0x000000010633c8ea chromedriver + 6162666
+2   chromedriver                        0x0000000105dc1de0 chromedriver + 417248
+3   chromedriver                        0x0000000105dd559b chromedriver + 497051
+4   chromedriver                        0x0000000105dd4352 chromedriver + 492370
+5   chromedriver                        0x0000000105dc9489 chromedriver + 447625
+6   chromedriver                        0x0000000105dc95b5 chromedriver + 447925
+7   chromedriver                        0x0000000105dc75f8 chromedriver + 439800
+8   chromedriver                        0x0000000105dcb76a chromedriver + 456554
+9   chromedriver                        0x0000000105e61d53 chromedriver + 1072467
+10  chromedriver                        0x0000000105e399c2 chromedriver + 907714
+11  chromedriver                        0x0000000105e60cdb chromedriver + 1068251
+12  chromedriver                        0x0000000105e39793 chromedriver + 907155
+13  chromedriver                        0x0000000105e05b25 chromedriver + 695077
+14  chromedriver                        0x0000000105e06791 chromedriver + 698257
+15  chromedriver                        0x0000000106301cc0 chromedriver + 5921984
+16  chromedriver                        0x0000000106305bb1 chromedriver + 5938097
+17  chromedriver                        0x00000001062dc004 chromedriver + 5767172
+18  chromedriver                        0x00000001063065db chromedriver + 5940699
+19  chromedriver                        0x00000001062ca704 chromedriver + 5695236
+20  chromedriver                        0x000000010632a0c8 chromedriver + 6086856
+21  chromedriver                        0x000000010632a290 chromedriver + 6087312
+22  chromedriver                        0x000000010633c4b1 chromedriver + 6161585
+23  libsystem_pthread.dylib             0x00007ff8048b0253 _pthread_start + 99
+24  libsystem_pthread.dylib             0x00007ff8048abbef thread_start + 15
+
+2025-05-05 14:49:58,157 - INFO - Finding cell for day 4, court 3, timeslot 24
+2025-05-05 14:49:58,183 - INFO - Found cell with class: open pointer
+2025-05-05 14:49:58,183 - INFO - Cell title/oldtitle: 
+2025-05-05 14:49:58,183 - INFO - Cell is available for booking
+2025-05-05 14:50:04,139 - WARNING - No confirmation message found. Will check by looking for booked cells.
+2025-05-05 14:50:04,167 - INFO - Checking for cells booked by: Kelly_taira@bofa.com
+2025-05-05 14:50:04,196 - INFO - Found 424 total cells
+2025-05-05 14:50:04,326 - INFO - Found booked cell with title: Reserved by: <b>BRIAN.DUBIEL@GMAIL.COM</b><br><b>5/1/2025 12:26:49 PM</b>
+2025-05-05 14:50:04,343 - INFO - Found booked cell with title: Reserved by: <b>SDRUCKMAN@HOTMAIL.COM</b><br><b>5/4/2025 6:08:52 PM</b>
+2025-05-05 14:50:04,352 - INFO - Found booked cell with title: Reserved by: <b>ROBERTGLENNGORE@GMAIL.COM</b><br><b>5/1/2025 9:54:17 PM</b>
+2025-05-05 14:50:04,403 - INFO - Found booked cell with title: Reserved by: <b>MATTALANHEATER@GMAIL.COM</b><br><b>5/4/2025 6:32:06 PM</b>
+2025-05-05 14:50:04,471 - INFO - Found booked cell with title: Reserved by: <b>CCHELWIG@AOL.COM</b><br><b>5/1/2025 8:48:06 AM</b>
+2025-05-05 14:50:04,519 - INFO - Found booked cell with title: Reserved by: <b>MICHLFRANK@SBCGLOBAL.NET</b><br><b>5/1/2025 7:51:35 AM</b>
+2025-05-05 14:50:04,570 - INFO - Found booked cell with title: Reserved by: <b>JULESWOODS@AOL.COM</b><br><b>5/1/2025 7:15:48 AM</b>
+2025-05-05 14:50:05,333 - INFO - Found booked cell with title: Reserved by: <b>APROKSCHA@YAHOO.COM</b><br><b>5/2/2025 3:06:50 PM</b>
+2025-05-05 14:50:05,496 - INFO - Found booked cell with title: Reserved by: <b>KELLY_TAIRA@BOFA.COM</b><br><b>5/5/2025 1:49:58 PM</b>
+2025-05-05 14:50:05,496 - INFO - Found cell booked by Kelly_taira@bofa.com
+2025-05-05 14:50:05,496 - INFO - Verification successful: Found cell booked by Kelly_taira@bofa.com
+2025-05-05 14:50:05,610 - INFO - Attempting to book reservation: COURT2
+2025-05-05 14:50:05,610 - INFO - User: Wtmcneill3@gmail.com, Court: 4, Time: 17:30
+2025-05-05 14:50:08,875 - INFO - Checking for cells booked by: Wtmcneill3@gmail.com
+2025-05-05 14:50:08,904 - INFO - Found 429 total cells
+2025-05-05 14:50:09,118 - INFO - Found booked cell with title: Reserved by: <b>FOURANDOUT@GMAIL.COM</b><br><b>5/3/2025 2:10:15 PM</b>
+2025-05-05 14:50:09,130 - INFO - Found booked cell with title: Reserved by: <b>BRIANMANOLA@YAHOO.COM</b><br><b>4/30/2025 8:30:23 AM</b>
+2025-05-05 14:50:09,140 - INFO - Found booked cell with title: Reserved by: <b>KELLY_TAIRA@BOFA.COM</b><br><b>5/1/2025 5:14:06 PM</b>
+2025-05-05 14:50:09,156 - INFO - Found booked cell with title: Reserved by: <b>DVANDEMOORE@ICLOUD.COM</b><br><b>5/2/2025 1:49:15 PM</b>
+2025-05-05 14:50:09,201 - INFO - Found booked cell with title: Reserved by: <b>APROKSCHA@YAHOO.COM</b><br><b>5/2/2025 3:06:50 PM</b>
+2025-05-05 14:50:09,214 - INFO - Found booked cell with title: Reserved by: <b>KELLY_TAIRA@BOFA.COM</b><br><b>5/5/2025 1:49:58 PM</b>
+2025-05-05 14:50:09,254 - INFO - Found booked cell with title: Reserved by: <b>JHELWIG@DOM.EDU</b><br><b>5/1/2025 8:50:04 AM</b>
+2025-05-05 14:50:09,281 - INFO - Found booked cell with title: Reserved by: <b>PETE.BRECKNOCK@GMAIL.COM</b><br><b>5/5/2025 9:48:44 AM</b>
+2025-05-05 14:50:09,307 - INFO - Found booked cell with title: Reserved by: <b>SHOOVER93@GMAIL.COM</b><br><b>5/4/2025 4:36:51 PM</b>
+2025-05-05 14:50:09,317 - INFO - Found booked cell with title: Reserved by: <b>KYLERETTBERG@GMAIL.COM</b><br><b>5/2/2025 9:57:25 AM</b>
+2025-05-05 14:50:09,325 - INFO - Found booked cell with title: Reserved by: <b>DVANDEMOORE@ICLOUD.COM</b><br><b>5/2/2025 1:15:54 PM</b>
+2025-05-05 14:50:10,741 - INFO - No cells found booked by Wtmcneill3@gmail.com
+2025-05-05 14:50:10,742 - INFO - Finding cell for day 4, court 4, timeslot 24
+2025-05-05 14:50:10,762 - INFO - Found cell with class: open pointer
+2025-05-05 14:50:10,762 - INFO - Cell title/oldtitle: 
+2025-05-05 14:50:10,762 - INFO - Cell is available for booking
+2025-05-05 14:50:16,674 - WARNING - No confirmation message found. Will check by looking for booked cells.
+2025-05-05 14:50:16,721 - INFO - Checking for cells booked by: Wtmcneill3@gmail.com
+2025-05-05 14:50:16,750 - INFO - Found 422 total cells
+2025-05-05 14:50:16,860 - INFO - Found booked cell with title: Reserved by: <b>BRIAN.DUBIEL@GMAIL.COM</b><br><b>5/1/2025 12:26:49 PM</b>
+2025-05-05 14:50:16,878 - INFO - Found booked cell with title: Reserved by: <b>SDRUCKMAN@HOTMAIL.COM</b><br><b>5/4/2025 6:08:52 PM</b>
+2025-05-05 14:50:16,886 - INFO - Found booked cell with title: Reserved by: <b>ROBERTGLENNGORE@GMAIL.COM</b><br><b>5/1/2025 9:54:17 PM</b>
+2025-05-05 14:50:16,939 - INFO - Found booked cell with title: Reserved by: <b>MATTALANHEATER@GMAIL.COM</b><br><b>5/4/2025 6:32:06 PM</b>
+2025-05-05 14:50:17,026 - INFO - Found booked cell with title: Reserved by: <b>CCHELWIG@AOL.COM</b><br><b>5/1/2025 8:48:06 AM</b>
+2025-05-05 14:50:17,078 - INFO - Found booked cell with title: Reserved by: <b>MICHLFRANK@SBCGLOBAL.NET</b><br><b>5/1/2025 7:51:35 AM</b>
+2025-05-05 14:50:17,133 - INFO - Found booked cell with title: Reserved by: <b>JULESWOODS@AOL.COM</b><br><b>5/1/2025 7:15:48 AM</b>
+2025-05-05 14:50:17,982 - INFO - Found booked cell with title: Reserved by: <b>APROKSCHA@YAHOO.COM</b><br><b>5/2/2025 3:06:50 PM</b>
+2025-05-05 14:50:18,138 - INFO - Found booked cell with title: Reserved by: <b>KELLY_TAIRA@BOFA.COM</b><br><b>5/5/2025 1:49:58 PM</b>
+2025-05-05 14:50:18,145 - INFO - Found booked cell with title: Reserved by: <b>WTMCNEILL3@GMAIL.COM</b><br><b>5/5/2025 1:50:11 PM</b>
+2025-05-05 14:50:18,145 - INFO - Found cell booked by Wtmcneill3@gmail.com
+2025-05-05 14:50:18,145 - INFO - Verification successful: Found cell booked by Wtmcneill3@gmail.com
+2025-05-05 14:50:18,261 - INFO - Attempting to book reservation: COURT3
+2025-05-05 14:50:18,261 - INFO - User: rckrause@gmail.com, Court: 5, Time: 17:30
+2025-05-05 14:50:21,654 - INFO - Checking for cells booked by: rckrause@gmail.com
+2025-05-05 14:50:21,684 - INFO - Found 429 total cells
+2025-05-05 14:50:21,925 - INFO - Found booked cell with title: Reserved by: <b>FOURANDOUT@GMAIL.COM</b><br><b>5/3/2025 2:10:15 PM</b>
+2025-05-05 14:50:21,935 - INFO - Found booked cell with title: Reserved by: <b>BRIANMANOLA@YAHOO.COM</b><br><b>4/30/2025 8:30:23 AM</b>
+2025-05-05 14:50:21,943 - INFO - Found booked cell with title: Reserved by: <b>KELLY_TAIRA@BOFA.COM</b><br><b>5/1/2025 5:14:06 PM</b>
+2025-05-05 14:50:21,962 - INFO - Found booked cell with title: Reserved by: <b>DVANDEMOORE@ICLOUD.COM</b><br><b>5/2/2025 1:49:15 PM</b>
+2025-05-05 14:50:22,022 - INFO - Found booked cell with title: Reserved by: <b>APROKSCHA@YAHOO.COM</b><br><b>5/2/2025 3:06:50 PM</b>
+2025-05-05 14:50:22,045 - INFO - Found booked cell with title: Reserved by: <b>KELLY_TAIRA@BOFA.COM</b><br><b>5/5/2025 1:49:58 PM</b>
+2025-05-05 14:50:22,054 - INFO - Found booked cell with title: Reserved by: <b>WTMCNEILL3@GMAIL.COM</b><br><b>5/5/2025 1:50:11 PM</b>
+2025-05-05 14:50:22,082 - INFO - Found booked cell with title: Reserved by: <b>JHELWIG@DOM.EDU</b><br><b>5/1/2025 8:50:04 AM</b>
+2025-05-05 14:50:22,103 - INFO - Found booked cell with title: Reserved by: <b>PETE.BRECKNOCK@GMAIL.COM</b><br><b>5/5/2025 9:48:44 AM</b>
+2025-05-05 14:50:22,125 - INFO - Found booked cell with title: Reserved by: <b>SHOOVER93@GMAIL.COM</b><br><b>5/4/2025 4:36:51 PM</b>
+2025-05-05 14:50:22,134 - INFO - Found booked cell with title: Reserved by: <b>KYLERETTBERG@GMAIL.COM</b><br><b>5/2/2025 9:57:25 AM</b>
+2025-05-05 14:50:22,143 - INFO - Found booked cell with title: Reserved by: <b>DVANDEMOORE@ICLOUD.COM</b><br><b>5/2/2025 1:15:54 PM</b>
+2025-05-05 14:50:23,492 - INFO - No cells found booked by rckrause@gmail.com
+2025-05-05 14:50:23,492 - INFO - Finding cell for day 4, court 5, timeslot 24
+2025-05-05 14:50:23,514 - INFO - Found cell with class: open pointer
+2025-05-05 14:50:23,514 - INFO - Cell title/oldtitle: 
+2025-05-05 14:50:23,514 - INFO - Cell is available for booking
+2025-05-05 14:50:29,395 - WARNING - No confirmation message found. Will check by looking for booked cells.
+2025-05-05 14:50:29,436 - INFO - Checking for cells booked by: rckrause@gmail.com
+2025-05-05 14:50:29,460 - INFO - Found 420 total cells
+2025-05-05 14:50:29,574 - INFO - Found booked cell with title: Reserved by: <b>BRIAN.DUBIEL@GMAIL.COM</b><br><b>5/1/2025 12:26:49 PM</b>
+2025-05-05 14:50:29,594 - INFO - Found booked cell with title: Reserved by: <b>SDRUCKMAN@HOTMAIL.COM</b><br><b>5/4/2025 6:08:52 PM</b>
+2025-05-05 14:50:29,601 - INFO - Found booked cell with title: Reserved by: <b>ROBERTGLENNGORE@GMAIL.COM</b><br><b>5/1/2025 9:54:17 PM</b>
+2025-05-05 14:50:29,667 - INFO - Found booked cell with title: Reserved by: <b>MATTALANHEATER@GMAIL.COM</b><br><b>5/4/2025 6:32:06 PM</b>
+2025-05-05 14:50:29,737 - INFO - Found booked cell with title: Reserved by: <b>CCHELWIG@AOL.COM</b><br><b>5/1/2025 8:48:06 AM</b>
+2025-05-05 14:50:29,790 - INFO - Found booked cell with title: Reserved by: <b>MICHLFRANK@SBCGLOBAL.NET</b><br><b>5/1/2025 7:51:35 AM</b>
+2025-05-05 14:50:29,853 - INFO - Found booked cell with title: Reserved by: <b>JULESWOODS@AOL.COM</b><br><b>5/1/2025 7:15:48 AM</b>
+2025-05-05 14:50:30,592 - INFO - Found booked cell with title: Reserved by: <b>APROKSCHA@YAHOO.COM</b><br><b>5/2/2025 3:06:50 PM</b>
+2025-05-05 14:50:30,750 - INFO - Found booked cell with title: Reserved by: <b>KELLY_TAIRA@BOFA.COM</b><br><b>5/5/2025 1:49:58 PM</b>
+2025-05-05 14:50:30,757 - INFO - Found booked cell with title: Reserved by: <b>WTMCNEILL3@GMAIL.COM</b><br><b>5/5/2025 1:50:11 PM</b>
+2025-05-05 14:50:30,764 - INFO - Found booked cell with title: Reserved by: <b>RCKRAUSE@GMAIL.COM</b><br><b>5/5/2025 1:50:23 PM</b>
+2025-05-05 14:50:30,765 - INFO - Found cell booked by rckrause@gmail.com
+2025-05-05 14:50:30,765 - INFO - Verification successful: Found cell booked by rckrause@gmail.com
