@@ -60,27 +60,27 @@ reservations:
   - name: COURT1
     username: "Kelly_taira@bofa.com"
     password: "Password1"
-    timeslot: "17:30"
+    timeslot: "18:00"
     court: "3"
     duration: "1.5"
-    days_in_advance: "4"
+    days_in_advance: "7"
     enabled: true
 
   - name: COURT2
     username: "Wtmcneill3@gmail.com"
     password: "Roscoe@1"
-    timeslot: "17:30"
+    timeslot: "18:00"
     court: "4"
     duration: "1.5"
-    days_in_advance: "4"
+    days_in_advance: "7"
     enabled: true
 
   - name: COURT3
     username: "rckrause@gmail.com"
     password: "40Luv@RFTC"
-    timeslot: "17:30"
+    timeslot: "18:00"
     court: "5"
     duration: "1.5"
-    days_in_advance: "4"
+    days_in_advance: "7"
     enabled: true
 
