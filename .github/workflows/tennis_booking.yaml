@@ -9,14 +9,12 @@ on:
         type: choice
         options:
           - "17:00"
-          - "17:30"
-          - "18:00"
-          - "18:30"
-        days_in_advance:
-          description: 'Days in advance to book'
-          required: true
-          type: choice
-          options:
+          - "6:00"
+      days_in_advance:
+        description: 'Days in advance to book'
+        required: true
+        type: choice
+        options:
             - "1"
             - "2"
             - "3"
