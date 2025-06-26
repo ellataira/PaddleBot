@@ -31,19 +31,10 @@ def main():
     parser = argparse.ArgumentParser(description='Tennis Court Reservation System')
     parser.add_argument('--config', '-c',
                         help='Path to configuration file (default: auto-detect)')
-    parser.add_argument('--courts', '-t', nargs='+', default=['COURT1', 'COURT2', 'COURT3'],
-                        help='Specific courts to book (default: COURT1 COURT2 COURT3)')
-    parser.add_argument('--username',
-                        help='Override username for booking')
-    parser.add_argument('--password',
-                        help='Override password for booking')
-    parser.add_argument('--court',
-                        help='Override court number for booking')
-    parser.add_argument('--timeslot',
-                        help='Override timeslot for booking (e.g. 17:30)')
-    parser.add_argument('--days-advance',
-                        dest='days_advance',
-                        help='Override days in advance for booking')
+    parser.add_argument('--timeslot', required=True,
+                        help='Timeslot to book (e.g. 17:00)')
+    parser.add_argument('--days-advance', dest='days_advance', required=True,
+                        help='Days in advance to book (e.g. 7)')
     parser.add_argument('--verbose', '-v', action='store_true',
                         help='Enable verbose logging')
     args = parser.parse_args()
@@ -69,55 +60,29 @@ def main():
         logging.error(f"Failed to initialize reservation manager: {str(e)}")
         return
 
-    # Check if we have override values from command line
-    have_overrides = any([args.username, args.password, args.court, args.timeslot, args.days_advance])
-
     # Process the reservations
-    if have_overrides:
-        # If we have overrides, use them to create a temporary reservation
-        for reservation in manager.reservations:
-            if reservation.name == args.courts[0]:  # Use the first specified court as template
-                # Create a new reservation with overrides
-                if args.username:
-                    logging.info(f"Overriding username: {args.username}")
-                    reservation.username = args.username
-                if args.password:
-                    logging.info(f"Overriding password: {args.password}")
-                    reservation.password = args.password
-                if args.court:
-                    logging.info(f"Overriding court: {args.court}")
-                    reservation.court = args.court
-                if args.timeslot:
-                    logging.info(f"Overriding timeslot: {args.timeslot}")
-                    reservation.raw_timeslot = args.timeslot
-                    # Update the numeric timeslot value from the configuration
-                    sport_type = manager.config['settings']['sport_type']
-                    reservation.timeslot = str(manager.config['time_slots'][sport_type].get(args.timeslot, "1"))
-                if args.days_advance:
-                    logging.info(f"Overriding days in advance: {args.days_advance}")
-                    reservation.days_in_advance = args.days_advance
+    results = {}
+    for reservation in manager.reservations:
+        if reservation.name in args.courts:
+            logging.info(f"Overriding timeslot for {reservation.name}: {args.timeslot}")
+            reservation.raw_timeslot = args.timeslot
 
-                # Book this single reservation with overrides
-                success = book_court(manager, reservation)
-                print(f"Booking with overrides: {'Success' if success else 'Failed'}")
-                return
-    else:
-        # Book each requested court using default config
-        results = {}
-        for court_name in args.courts:
-            for reservation in manager.reservations:
-                if reservation.name == court_name:
-                    try:
-                        results[court_name] = book_court(manager, reservation)
-                    except Exception as e:
-                        logging.error(f"Error booking {court_name}: {str(e)}", exc_info=args.verbose)
-                        results[court_name] = False
+            sport_type = manager.config['settings']['sport_type']
+            reservation.timeslot = str(manager.config['time_slots'][sport_type].get(args.timeslot, "1"))
 
-        # Print summary
-        print("\n=== Booking Summary ===")
-        for name, success in results.items():
-            print(f"{name}: {'Success' if success else 'Failed'}")
+            logging.info(f"Overriding days in advance for {reservation.name}: {args.days_advance}")
+            reservation.days_in_advance = args.days_advance
 
+            try:
+                results[reservation.name] = book_court(manager, reservation)
+            except Exception as e:
+                logging.error(f"Error booking {reservation.name}: {str(e)}", exc_info=args.verbose)
+                results[reservation.name] = False
+
+    # Print summary
+    print("\n=== Booking Summary ===")
+    for name, success in results.items():
+        print(f"{name}: {'Success' if success else 'Failed'}")
 
 if __name__ == "__main__":
     main()
