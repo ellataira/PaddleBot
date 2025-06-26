@@ -3,7 +3,6 @@
 Tennis Court Reservation Automation
 -----------------------------------
 Automates the process of booking tennis courts based on YAML configuration.
-Accepts optional command-line arguments to override default configuration.
 """
 
 import argparse
@@ -68,7 +67,7 @@ def main():
         sport_type = manager.config['settings']['sport_type']
         reservation.timeslot = str(manager.config['time_slots'][sport_type].get(args.timeslot, "1"))
 
-        logging.info(f"Overriding days in advance for {reservation.name}: {args.days_advance}")
+        logging.info(f"Booking {args.days_advance} days in advance for {reservation.name}")
         reservation.days_in_advance = args.days_advance
 
         try:
