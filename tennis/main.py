@@ -63,21 +63,19 @@ def main():
     # Process the reservations
     results = {}
     for reservation in manager.reservations:
-        if reservation.name in args.courts:
-            logging.info(f"Overriding timeslot for {reservation.name}: {args.timeslot}")
-            reservation.raw_timeslot = args.timeslot
+        reservation.raw_timeslot = args.timeslot
 
-            sport_type = manager.config['settings']['sport_type']
-            reservation.timeslot = str(manager.config['time_slots'][sport_type].get(args.timeslot, "1"))
+        sport_type = manager.config['settings']['sport_type']
+        reservation.timeslot = str(manager.config['time_slots'][sport_type].get(args.timeslot, "1"))
 
-            logging.info(f"Overriding days in advance for {reservation.name}: {args.days_advance}")
-            reservation.days_in_advance = args.days_advance
+        logging.info(f"Overriding days in advance for {reservation.name}: {args.days_advance}")
+        reservation.days_in_advance = args.days_advance
 
-            try:
-                results[reservation.name] = book_court(manager, reservation)
-            except Exception as e:
-                logging.error(f"Error booking {reservation.name}: {str(e)}", exc_info=args.verbose)
-                results[reservation.name] = False
+        try:
+            results[reservation.name] = book_court(manager, reservation)
+        except Exception as e:
+            logging.error(f"Error booking {reservation.name}: {str(e)}", exc_info=args.verbose)
+            results[reservation.name] = False
 
     # Print summary
     print("\n=== Booking Summary ===")
