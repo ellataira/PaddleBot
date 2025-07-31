@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       timeslot:
-        description: 'Time slot to book (e.g. 15:30, 16:30)'
+        description: 'Time slot to book (e.g. 14:30, 18:00)'
         required: true
-        default: '15:30'
+        default: '14:30'
       days_in_advance:
         description: 'Days in advance to book'
         required: false
