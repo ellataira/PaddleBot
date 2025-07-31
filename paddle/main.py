@@ -1,40 +1,64 @@
-import traceback
 from datetime import date
 from paddle import book_paddle_automated
+import os
+import logging
+import traceback
 from data import data
+from Util import Util
+
+# Set up logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    handlers=[
+        logging.FileHandler("paddle.log", mode="w"),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+logger.info("Started paddle reservation script")
+
+
+# Read inputs from GitHub Actions
+input_time = os.environ.get("INPUT_TIMESLOT", "15:30")  # fallback to default
+input_days = int(os.environ.get("INPUT_DAYS_IN_ADVANCE", "7"))
+
+logger.info(f"Input time slot: {input_time}")
+logger.info(f"Booking days in advance: {input_days}")
+
+# Set values dynamically from inputs
+for court in [data.COURT1, data.COURT2]:
+    court.time = Util(is_tennis=False).calc_time(input_time)
+    court.days_in_advance = input_days
 
 
 def make_res(res):
-    print(
-        "attempting to reserve 1 week in advance: \n"
-        + "\nfor court "
-        + res.court
-        + "\nunder "
-        + str(res.names)
-        + "\ncode: "
-        + res.code
-        + "\n"
+    logger.info(
+        f"--- Attempting reservation ---\n"
+        f"Court: {res.court}\n"
+        f"Names: {res.names}\n"
+        f"Code: {res.code}\n"
+        f"Days in advance: {res.days_in_advance}\n"
     )
 
     try:
         court = book_paddle_automated(res)
-        """if reservation failed, try one more time """
-        print("first attempt: " + court + "\n")
+        logger.info(f"✅ First attempt successful: {court}")
 
     except Exception as e:
-        print("attempt failed, retrying...")
-
+        logger.warning(f"⚠️ First attempt failed: {e}. Retrying...")
         try:
             court = book_paddle_automated(res)
+            logger.info(f"✅ Retry successful: {court}")
         except Exception as e:
-            print("Retry Failed: ", {"error": e})
+            logger.error("❌ Retry failed", exc_info=True)
             raise
 
-    print("final status: " + court + "\n---------------------------------")
+    logger.info(f"✔ Final reservation status: {court}")
+    logger.info("-" * 50)
 
 
 def court1():
-    ## court data in .gitignore file which contains type.py()s of booking info
     make_res(data.COURT1)
 
 
@@ -43,14 +67,14 @@ def court2():
 
 
 if __name__ == "__main__":
-    print(str(date.today()) + "\n\n")
+    logger.info(f"\nRunning on {date.today()}\n")
 
     try:
         court1()
-    except:
-        print("court 1 failed\n")
+    except Exception as e:
+        logger.error("❌ Court 1 reservation failed", exc_info=True)
 
     try:
         court2()
-    except:
-        print("court 2 failed\n")
+    except Exception as e:
+        logger.error("❌ Court 2 reservation failed", exc_info=True)

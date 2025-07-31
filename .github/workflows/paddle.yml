@@ -2,6 +2,15 @@ name: Paddle Booking Automation
 
 on:
   workflow_dispatch:
+    inputs:
+      timeslot:
+        description: 'Time slot to book (e.g. 15:30, 16:30)'
+        required: true
+        default: '15:30'
+      days_in_advance:
+        description: 'Days in advance to book'
+        required: false
+        default: '7'
 
 jobs:
   selenium-job:
