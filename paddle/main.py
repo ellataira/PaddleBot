@@ -1,5 +1,5 @@
 from datetime import date
-from paddle import book_paddle_automated
+from manager import book_paddle_automated
 import os
 import logging
 import traceback
