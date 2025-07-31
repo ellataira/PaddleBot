@@ -25,7 +25,7 @@ def book_paddle_automated(res: Reservation):
         driver.find_element(By.NAME, "general_password").send_keys(res.code)
 
         # Submit the reservation
-        driver.find_element(By.NAME, "Logon").click()
+        driver.find_element(By.XPATH, '//input[@type="submit" and @value="Logon"]').click()
 
         # Wait until the select element is present
         select_day_element = WebDriverWait(driver, 5).until(
