@@ -21,8 +21,14 @@ def book_paddle_automated(res: Reservation):
         # Go to the booking page
         driver.get("https://www.registration-software.net/cgi-bin/scheduling/rfparks/schedule.cgi")
 
+        # Enter the member password
+        driver.find_element(By.NAME, "password").send_keys(res.code)
+
+        # Submit the reservation
+        driver.find_element(By.NAME, "Logon").click()
+
         # Wait until the select element is present
-        select_day_element = WebDriverWait(driver, 10).until(
+        select_day_element = WebDriverWait(driver, 5).until(
             EC.presence_of_element_located((By.NAME, "selected_day"))
         )
 
