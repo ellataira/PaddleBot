@@ -22,7 +22,7 @@ def book_paddle_automated(res: Reservation):
         driver.get("https://www.registration-software.net/cgi-bin/scheduling/rfparks/schedule.cgi")
 
         # Enter the member password
-        driver.find_element(By.NAME, "password").send_keys(res.code)
+        driver.find_element(By.NAME, "general_password").send_keys(res.code)
 
         # Submit the reservation
         driver.find_element(By.NAME, "Logon").click()
