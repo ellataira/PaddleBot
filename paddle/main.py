@@ -20,7 +20,7 @@ logger.info("Started paddle reservation script")
 
 
 # Read inputs from GitHub Actions
-input_time = os.environ.get("INPUT_TIMESLOT", "15:30")  # fallback to default
+input_time = os.environ.get("INPUT_TIMESLOT", "16:30")  # fallback to default
 input_days = int(os.environ.get("INPUT_DAYS_IN_ADVANCE", "7"))
 
 logger.info(f"Input time slot: {input_time}")
