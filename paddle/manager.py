@@ -46,11 +46,6 @@ def book_paddle_automated(res: Reservation):
 
         select_day.select_by_value(value)
 
-        # Wait briefly for the page to reload after selecting the day
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.NAME, "submit_paypal"))
-        )
-
         # Locate the desired court/time slot
         tbody_xpath = "/html/body/center[2]/table/tbody/tr[2]/td[2]/center/table/tbody"
         row_xpath = f"{tbody_xpath}/tr[{res.time}]/td[{res.court}]/p/a"
