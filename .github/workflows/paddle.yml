@@ -8,7 +8,7 @@ on:
         required: true
         default: '16:30'
       days_in_advance:
-        description: 'Days in advance to book'
+        description: 'Days in advance to book.'
         required: false
         default: '7'
 
@@ -44,5 +44,7 @@ jobs:
       - name: Run Paddle Booking Automation
         env:
           DISPLAY: :99
+          INPUT_TIMESLOT: ${{ inputs.timeslot }}
+          INPUT_DAYS_IN_ADVANCE: ${{ inputs.days_in_advance }}
         run: |
           python /home/runner/work/PaddleBot/PaddleBot/paddle/main.py

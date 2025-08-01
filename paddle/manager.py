@@ -42,7 +42,7 @@ def book_paddle_automated(res: Reservation):
         ]
 
         # Use +1 offset because the first option is "---Show Another Day---"
-        value = days[res.days_in_advance]
+        value = days[res.days_in_advance + 1]
 
         select_day.select_by_value(value)
 
